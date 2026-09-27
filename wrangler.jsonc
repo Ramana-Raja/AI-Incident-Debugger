@@ -1,0 +1,52 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "ai-incident-debugger-starter",
+	"main": "src/server.ts",
+	"compatibility_date": "2026-06-11",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"ai": {
+		"binding": "AI",
+		"remote": true
+	},
+	"assets": {
+		"directory": "./public",
+		"not_found_handling": "single-page-application",
+		"run_worker_first": [
+			"/agents/*",
+			"/oauth/*"
+		]
+	},
+	"durable_objects": {
+		"bindings": [
+			{
+				"class_name": "IncidentAgent",
+				"name": "IncidentAgent"
+			}
+		]
+	},
+	"workflows": [
+		{
+			"name": "investigation-workflow",
+			"binding": "INVESTIGATION_WORKFLOW",
+			"class_name": "InvestigationWorkflow"
+		}
+	],
+	"migrations": [
+		{
+			"new_sqlite_classes": [
+				"IncidentAgent"
+			],
+			"tag": "v1"
+		}
+	],
+	"observability": {
+		"enabled": true
+	},
+	"upload_source_maps": true
+}
